@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="smartDebug">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="socket.io-client/dist/socket.io.min.js"></script>
+    <script src="jquery/dist/jquery.min.js"></script>
+    <script src="angular/angular.min.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="clusterize.js/clusterize.min.js"></script>
+    <script src="ramda/dist/ramda.min.js"></script>
+    <script src="angular-dragula/dist/angular-dragula.js"></script>
+    <script src="randomcolor/randomColor.js"></script>
+    <script src="touch-splitter-jquery/src/jquery.touchsplitter.js"></script>
+
+
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="css/sticky-footer-navbar.css" type="text/css" rel="stylesheet">
+    <link href="css/clusterize.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-dragula/1.2.8/dragula.min.css" />
+    <!--<link href="css/main.css" type="text/css" rel="stylesheet">-->
+    <link href="touch-splitter-jquery/src/touchsplitter.css" rel="stylesheet" type="text/css">
+    <link href="css/yellow.css" type="text/css" rel="stylesheet">
+    <script src="splitter.js"></script>
+    <script src="script.js"></script>
+</head>
+<body ng-controller="mainCtrl">
+<!-- Wrapper-->
+<div class="wrapper" style="height: 100%">
+
+    <!-- Header-->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div id="mobile-menu">
+                    <div class="left-nav-toggle">
+                        <a href="#">
+                            <i class="stroke-hamburgermenu"></i>
+                        </a>
+                    </div>
+                </div>
+                <a class="navbar-brand" href="index.html">
+                    W-DEBUG
+                    <span>v.1.0</span>
+                </a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <div class="left-nav-toggle">
+                    <a href="">
+                        <i class="stroke-hamburgermenu"></i>
+                    </a>
+                </div>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class=" profil-link">
+                        <a href="login.html">
+                            <span>GIT</span>
+                            <img src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" class="img-circle" alt="">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End header-->
+
+
+    <!-- Main content-->
+    <section style="padding-top: 50px; padding-left: 20px;padding-right: 20px; height: 100%" id="selec">
+        <div style="height: 95%" class=" row split-me">
+            <div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="header-title">
+                            <h3>VARIABLES</h3>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+                <div style="height: 100%; overflow: auto" >
+                    <div  dragula="'seventh-bag'"  dragula-model='debugValues'>
+                        <div class="panel panel-filled" style="height: auto; border-left: 3px solid {{debugValue.color}}" ng-repeat ="debugValue in debugValues track by $index">
+                            <div class="panel-heading">
+                                {{debugValue.name}}
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">{{debugValue.values[0]}}</div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">{{debugValue.values[1]}}</div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">{{debugValue.values[2]}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-lg-12">
+                            <div class="header-title">
+                                <h3>STDOUT AREA</h3>
+                            </div>
+                        <hr>
+                    </div>
+                </div>
+                <div id="mes" class="panel panel-filled" style="height: auto; overflow: auto">
+                    <div class="panel-heading">
+                      Message filter
+                        <button class="btn btn-primary" ng-click="selectAll()">Select All</button>
+                        <button class="btn btn-danger" ng-click="selectNone()">Select none</button>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-4 col-md-4 col-xs-4" ng-repeat="typeName in typesList">
+
+                                <label style="color:{{getColorByType(typeName)}}" >
+                                    <input
+                                            type="checkbox"
+                                            name="selectedTypes[]"
+                                            value="{{typeName}}"
+                                            ng-checked="typesSelected.indexOf(typeName) > -1"
+                                            ng-click="toggleSelection(typeName)"
+                                    > {{typeName}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-filled" style="height:110px;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-5 col-md-5 col-lg-5 col-sm-5">
+                                <form class="form">
+                                    <div class="form-group"><label for="exampleInputName2">Filter</label> <input ng-model="filterText" type="text" class="form-control" id="exampleInputName2" placeholder="filter word"></div>
+                                </form>
+                            </div>
+                            <div style="padding-top: 25px" class="col-xs-3 col-md-3 col-lg-3 col-sm-3">
+                                <button  class="btn btn-w-md btn-primary" ng-click="stopShow()">{{(notShowed.length==0)?'Stop display':'Resume'}}</button>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 col-sm-4">
+                                <div ng-show="notShowed.length!=0" style="padding-top: 26px;">
+                                    <label>Show more</label>
+                                    <div class="btn-group" >
+                                        <button class="btn btn-success btn-sm" ng-disabled = "notShowed.length<1" ng-click="showMore(1)">1</button>
+                                        <button class="btn btn-success btn-sm" ng-disabled = "notShowed.length<5" ng-click="showMore(5)">5</button>
+                                        <button class="btn btn-success btn-sm" ng-disabled = "notShowed.length<10" ng-click="showMore(10)">10</button>
+                                        <button class="btn btn-success btn-sm" ng-disabled = "notShowed.length<20" ng-click="showMore(20)">20</button>
+                                        <button class="btn btn-success btn-sm" ng-disabled = "notShowed.length<50" ng-click="showMore(50)">50</button>
+                                        <button class="btn btn-success btn-sm" ng-click="showMore('all')"> all </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <span>Total messages - {{rows.length}}</span>
+                                <span ng-show="notShowed.length!=0">You can show more - {{notShowed.length}}</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="panel panel-filled" >
+                    <div class="panel-heading">
+                        Stdout
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <label>
+                                <input type="checkbox" ng-model="autoscroll">
+                                AutoScroll
+                            </label>
+
+                            <div id="scrollArea" class="clusterize-scroll" schroll-bottom="messages" style="height: {{block_height()}}">
+                                <div id="contentArea" class="clusterize-content">
+                                    <div class="clusterize-no-data">Loading data…</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End main content-->
+
+</div>
+
+<footer class="footer">
+    <p class="text-muted">The MIT License (MIT)  Copyright (c) {{date | date:'yyyy'}} Markov Sergii</p>
+</footer>
+
+
+</body>
+</html>
