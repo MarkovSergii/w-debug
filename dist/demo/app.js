@@ -1,8 +1,8 @@
-const debug = require('./w-debug')({
+const debug = require('../w-debug')({
     console:true,
-    clearOnReconect: false
+    clearOnReconect: false,
+    port:28888
 });
-
 
 
 let showDebug = (type,msg)=>
@@ -19,19 +19,19 @@ let l=0;
 let o=0;
 let p=0;
 
-/*
+
 setInterval(()=>{
     let r = {name:"Joe",sellPrice:i}
     showDebug('test1',r)
     i++;    
 },500);
-*/
+
 setInterval(()=>{
     let q = [1,2,j]
     showDebug('test2',q);
     j++;
 },400);
-/*
+
 setInterval(()=>{
     let q = [1,2,j]
     showDebug('test8',q);
@@ -78,7 +78,7 @@ setInterval(()=>{
     showLog('xx',o,'yy',p)
     o++;
 },600);
-*/
+
 setInterval(()=>{
     showLog(p)
     p++;
