@@ -28,7 +28,7 @@ let wDebug = (params)=>{
                     sok.emit('logDebug', data);
                 }
                 catch(e){
-                    _log('Error',e)
+                   
                 }
                 _log.apply(this,args)
             };
@@ -45,7 +45,7 @@ let wDebug = (params)=>{
                     sok.emit('logDebug', data);
                 }
                 catch(e){
-                    _log('Error',e)
+
                 }
             }
         };
