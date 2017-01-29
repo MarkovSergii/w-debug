@@ -1,2 +1,2 @@
 # w-debug
-Simple tool for debug and view change values
+Simple tool for debuging and tracking changes in values
