@@ -51,7 +51,7 @@ let wDebug = (params)=>{
         };
 
         app.use (express.static(__dirname+'/public'))
-        app.use (express.static(__dirname+'/node_modules'))
+        app.use (express.static(__dirname+'/../../node_modules'))
 
         app.get('/', function (req, res) {
             res.sendfile(__dirname + '/index.html');
