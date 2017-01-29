@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const concat = require('gulp-concat');
+var watch = require('gulp-watch');
 
 gulp.task('css', function() {
     gulp.src([
@@ -48,3 +49,11 @@ gulp.task('build',function() {
     gulp.run('js');
     gulp.run('app');
 });
+
+gulp.task('watch', function() {
+    gulp.run('build');
+    gulp.watch('src/**/*.*', function() {
+        gulp.run('build');
+    });
+    
+})

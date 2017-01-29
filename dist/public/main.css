@@ -110,12 +110,17 @@ code {
 .TouchSplitter>div.test-em{width:1em;}
 
 .TouchSplitter>div.splitter-bar>div{
-	width:1em;height:1em;
+
 	position:relative;
-	background-color:rgba(0,0,0,0.2);
 }
 .TouchSplitter.h-ts>div.splitter-bar>div{margin-top: -.5em; top:50%;}
 .TouchSplitter.v-ts>div.splitter-bar>div{margin-left: -.5em; left:50%;}
+.splitter-bar-dot {
+
+	height: 200px;
+	background-color: #1d1f24;
+
+}
 html{
     height: 100%;
 }

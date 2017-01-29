@@ -70,7 +70,7 @@ setInterval(()=>{
 },800);
 
 setInterval(()=>{
-    showDebug('test3',k)
+    showDebug('test3dtyyiytgityityityityityityityityityi',k)
     k++;
 },3000);
 

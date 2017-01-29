@@ -6,6 +6,7 @@ let wDebug = (params)=>{
     let server = require('http').Server(app);
     let io = require('socket.io')(server);
     let R = require('ramda');
+    let packege = require('../package.json')
 
     if (that) return that.debagFunction
     else
@@ -28,7 +29,6 @@ let wDebug = (params)=>{
                     sok.emit('logDebug', data);
                 }
                 catch(e){
-                   
                 }
                 _log.apply(this,args)
             };
@@ -45,7 +45,6 @@ let wDebug = (params)=>{
                     sok.emit('logDebug', data);
                 }
                 catch(e){
-
                 }
             }
         };
@@ -60,6 +59,10 @@ let wDebug = (params)=>{
         io.on('connection', (socket) => {
             sok = socket;
             if (this.clearOnReconect) sok.emit('clear')
+            sok.emit('version',packege.version)
+
+
+
         });
 
         let variables = [];
@@ -73,12 +76,14 @@ let wDebug = (params)=>{
             variables.push(variable)
         };
 
+
+
         let updateVariable = (variable,value)=>{
             let index1 = R.findIndex(R.propEq('name', variable))(variables);
             if (index1!= -1){
                 variables[index1].values.unshift(value);
                 variables[index1].values.length = 3;
-                variables[index1].dates.unshift(new Date());
+                variables[index1].dates.unshift(((new Date()).getTime()/1000));
                 variables[index1].dates.length = 3;
                 try{
                     sok.emit('debugValue', variables);
@@ -94,10 +99,8 @@ let wDebug = (params)=>{
 
         server.listen(this.port);
 
-
         that = this;
         return that.debagFunction
-
     }
 };
 

@@ -147,7 +147,7 @@
           }
         }
         firstdiv = this.element.find(">div:first");
-        splitterHTML = "<div class=\"splitter-bar\">" + (this.docks.name && this.docks.name.match(/first|second/) ? '<div></div>' : '') + "</div>";
+        splitterHTML = "<div class=\"splitter-bar\"><div class=\"splitter-bar-dot\"></div>" + (this.docks.name && this.docks.name.match(/first|second/) ? '<div></div>' : '') + "</div>";
         if (firstdiv.length === 0) {
           inners = this.element.html();
           this.element.html("<div></div> " + splitterHTML + " <div></div>");

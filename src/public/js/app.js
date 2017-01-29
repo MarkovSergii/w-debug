@@ -52,7 +52,7 @@ let mainCtrl = ($scope,dragulaService)=>{
         let full = $('#selec').height();
         let mes = $('#mes').height();
         let filter = 110;
-        return full - mes - filter-200 + 'px';
+        return full - mes - filter - 200 + 'px';
     };
 
     socket.on('clear', function () {
@@ -64,6 +64,12 @@ let mainCtrl = ($scope,dragulaService)=>{
         $scope.$apply();
     });
 
+    socket.on('version', function (version) {
+        $scope.version = version;
+        $scope.$apply();
+    });
+    
+    
     socket.on('debugValue', function (data) {
 
         data.map((item)=>{
@@ -120,7 +126,7 @@ let mainCtrl = ($scope,dragulaService)=>{
 
 
     let filterByText = (item) =>
-        JSON.stringify(item).includes($scope.filterText)
+        JSON.stringify(item).toLowerCase().includes($scope.filterText.toLowerCase())
 
 
     let checkFilter = (list) =>{
@@ -137,8 +143,19 @@ let mainCtrl = ($scope,dragulaService)=>{
         })
     }
 
+
+    let addZero = (i) =>{
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    };
+    
+    let formatDate = (date)=> (addZero(date.getHours()) + ':' + addZero(date.getMinutes()) + ':' + addZero(date.getSeconds()) +'.'+ date.getMilliseconds())
+      
+    
     let renderHTML = (list)=>
-        list.map((item)=> ('<div><span style="color:'+item.color+'"> '+item.type+' </span><span> '+ item.date +' </span><span>'+JSON.stringify(item.msg)+'</span></div>'))
+        list.map((item)=> ('<div><div style="display: inline-block; width:85px;color:'+item.color+'">['+ formatDate(new Date(item.date)) +' </div><div style="padding-left: 5px; display: inline-block; width: auto; color:'+item.color+'"> '+item.type+']</div><div style="padding-left: 5px; display: inline-block;">'+JSON.stringify(item.msg)+'</div></div>'))
 
 
     let updateRows = (list)=>{
