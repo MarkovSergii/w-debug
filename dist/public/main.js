@@ -1263,16 +1263,70 @@ $(document).ready(function(){
 
 })
 
-var socket = io.connect('http://localhost:28888');
-
-
-
-
 let smartDebug = angular.module('smartDebug',[angularDragula(angular)]);
+let socket;
+
+let mainCtrl = ($scope,dragulaService,$http)=>{
+
+    let runSocket = ()=>{
+        socket.on('logDebug', function (data) {
+            if (!$scope.typesList.includes(data.type))
+            {
+                data.color = randomColor({
+                    seed:data.name
+                });
+                $scope.typesList.push(data.type)
+                $scope.typesSelected.push(data.type)
+            }
+
+            $scope.newRow({
+                type:data.type,
+                color:$scope.getColorByType(data.type),
+                date: data.date,
+                msg: data.msg
+            })
+            $scope.$apply();
+        });
+        socket.on('clear', function () {
+            $scope.rows = [];
+            $scope.typesList = [];
+            $scope.typesSelected = [];
+            $scope.debugValues = [];
+            updateRows($scope.rows);
+            $scope.$apply();
+        });
+
+        socket.on('version', function (version) {
+            $scope.version = version;
+            $scope.$apply();
+        });
 
 
-let mainCtrl = ($scope,dragulaService)=>{
+        socket.on('debugValue', function (data) {
 
+            data.map((item)=>{
+
+                let index =  R.findIndex(R.propEq('name', item.name))($scope.debugValues);
+                item.color = $scope.getColorByType(item.name);
+                if (index == -1)
+                    $scope.debugValues.push(item)
+                else
+                    $scope.debugValues[index] = item;
+            });
+
+            $scope.$apply();
+        });
+    }
+
+    $http.get('/getPort')
+        .then((response)=>{
+            socket = io.connect('http://localhost:'+response.data.port);
+            runSocket()
+        })
+        .catch((e)=>{
+            console.log(e)            
+        })
+    
     $scope.rows =[];
     $scope.totalLength = $scope.rows.length;
     $scope.filterText ='';
@@ -1282,24 +1336,7 @@ let mainCtrl = ($scope,dragulaService)=>{
     $scope.debugValues = [];
 
 
-    socket.on('logDebug', function (data) {
-        if (!$scope.typesList.includes(data.type))
-        {
-            data.color = randomColor({
-                seed:data.name
-            });
-            $scope.typesList.push(data.type)
-            $scope.typesSelected.push(data.type)
-        }
-        
-        $scope.newRow({
-            type:data.type,
-            color:$scope.getColorByType(data.type),
-            date: data.date,
-            msg: data.msg
-        })
-        $scope.$apply();
-    });
+
 
     $scope.selectAll = ()=>{
         $scope.typesSelected = angular.copy($scope.typesList)
@@ -1318,37 +1355,6 @@ let mainCtrl = ($scope,dragulaService)=>{
         let filter = 110;
         return full - mes - filter - 200 + 'px';
     };
-
-    socket.on('clear', function () {
-        $scope.rows = [];
-        $scope.typesList = [];
-        $scope.typesSelected = [];
-        $scope.debugValues = [];
-        updateRows($scope.rows);
-        $scope.$apply();
-    });
-
-    socket.on('version', function (version) {
-        $scope.version = version;
-        $scope.$apply();
-    });
-    
-    
-    socket.on('debugValue', function (data) {
-
-        data.map((item)=>{
-
-           let index =  R.findIndex(R.propEq('name', item.name))($scope.debugValues);
-           item.color = $scope.getColorByType(item.name);
-           if (index == -1)
-               $scope.debugValues.push(item)
-           else
-               $scope.debugValues[index] = item;
-        });
-
-        $scope.$apply();
-    });
-
 
     $scope.getColorByType = (type)=>
         randomColor({

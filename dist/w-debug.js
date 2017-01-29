@@ -8,12 +8,20 @@ let wDebug = (params)=>{
     let R = require('ramda');
     let packege = require('../package.json')
 
+
+
     if (that) return that.debagFunction
     else
     {
+
+
         this.console = (params.console == false) ? false : true;
         this.clearOnReconect = (params.clearOnReconect == false) ? false : true;
         this.port = (params.port) ? params.port : 28888;
+
+        app.get('/getPort',(req,res)=>{
+            res.send({port:this.port});
+        })
 
         if (this.console){
             let _log = global.console.log;

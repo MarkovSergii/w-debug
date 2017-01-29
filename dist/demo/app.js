@@ -1,7 +1,7 @@
 const debug = require('../w-debug')({
     console:true,
     clearOnReconect: false,
-    port:28888
+    port:3012
 });
 
 
