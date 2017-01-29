@@ -1,6 +1,6 @@
 {
   "name": "w-debug",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple tool for debug and view change values",
   "main": "w-debug.js",
   "scripts": {
