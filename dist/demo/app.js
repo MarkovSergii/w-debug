@@ -27,13 +27,13 @@ setInterval(()=>{
 },500);
 
 setInterval(()=>{
-    let q = [1,2,j]
+    let q = [1,null,j]
     showDebug('test2',q);
     j++;
 },400);
 
 setInterval(()=>{
-    let q = [1,2,j]
+    let q = [1,true,j]
     showDebug('test8',q);
     j++;
 },400);

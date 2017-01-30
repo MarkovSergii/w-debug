@@ -4,6 +4,13 @@ html{
 body{
     height: 93%;
 }
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: #32F039; }
+.number { color: #5EC2F3; }
+.boolean { color: #E03E3E; }
+.null { color: #E2C96B; }
+.key { color: #23A0DB; }
+
 .btn:active,
 .btn.active {
     box-shadow: none;

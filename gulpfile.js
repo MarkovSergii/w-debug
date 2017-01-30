@@ -9,7 +9,8 @@ gulp.task('css', function() {
         'src/public/css/clusterize.css',
         'src/public/css/dragula.min.css',
         'src/public/css/touchsplitter.css',
-        'src/public/css/yellow.css'
+        'src/public/css/yellow.css',
+        'src/public/css/json-formatter.min.css'
         ])
         .pipe(concat("main.css"))
         .pipe(gulp.dest('./dist/public/'))
@@ -20,6 +21,7 @@ gulp.task('js', function() {
         'src/public/js/jquery.min.js',
         'src/public/js/angular.min.js',
         'src/public/js/angular-dragula.min.js',        
+        'src/public/js/json-formatter.min.js',        
         'src/public/js/bootstrap.min.js',
         'src/public/js/clusterize.min.js',
         'src/public/js/jquery.touchsplitter.js',

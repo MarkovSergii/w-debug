@@ -1,6 +1,12 @@
 
-let smartDebug = angular.module('smartDebug',[angularDragula(angular)]);
+let smartDebug = angular.module('smartDebug',[angularDragula(angular),'jsonFormatter']);
 let socket;
+
+smartDebug.config(function (JSONFormatterConfigProvider) {
+
+    // Enable the hover preview feature
+    JSONFormatterConfigProvider.hoverPreviewEnabled = true;
+});
 
 let mainCtrl = ($scope,dragulaService,$http)=>{
 
@@ -158,10 +164,27 @@ let mainCtrl = ($scope,dragulaService,$http)=>{
     };
     
     let formatDate = (date)=> (addZero(date.getHours()) + ':' + addZero(date.getMinutes()) + ':' + addZero(date.getSeconds()) +'.'+ date.getMilliseconds())
-      
+    let formatJson = (json) =>  {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    };
     
     let renderHTML = (list)=>
-        list.map((item)=> ('<div><div style="display: inline-block; width:85px;color:'+item.color+'">['+ formatDate(new Date(item.date)) +' </div><div style="padding-left: 5px; display: inline-block; width: auto; color:'+item.color+'"> '+item.type+']</div><div style="padding-left: 5px; display: inline-block;">'+JSON.stringify(item.msg)+'</div></div>'))
+        list.map((item)=> ('<div><div style="display: inline-block; width:85px;color:'+item.color+'">['+ formatDate(new Date(item.date)) +' </div><div style="padding-left: 5px; display: inline-block; width: auto; color:'+item.color+'"> '+item.type+']</div><div style="padding-left: 5px; display: inline-block;">'+formatJson(JSON.stringify(item.msg))+'</div></div>'))
 
 
     let updateRows = (list)=>{

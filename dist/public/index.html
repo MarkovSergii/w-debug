@@ -69,22 +69,22 @@
                             <div class="panel-body" style="padding-bottom: 5px">
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        {{debugValue.values[0]}}
                                         <div>
                                             <small>current</small>
                                         </div>
+                                       <json-formatter class="json-formatter-dark" open="1" json='debugValue.values[0]'></json-formatter>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        {{debugValue.values[1]}}
                                         <div>
                                             <small>{{debugValue.dates[0]-debugValue.dates[1] | number:3}} sec ago</small>
                                         </div>
+                                        <json-formatter class="json-formatter-dark" open="1" json='debugValue.values[1]'></json-formatter>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        {{debugValue.values[2]}}
                                         <div>
                                             <small>{{debugValue.dates[0]-debugValue.dates[2] | number:3}} sec ago</small>
                                         </div>
+                                        <json-formatter class="json-formatter-dark" open="1" json='debugValue.values[2]'></json-formatter>
                                     </div>
                                 </div>
                             </div>
