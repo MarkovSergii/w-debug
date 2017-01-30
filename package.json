@@ -1,6 +1,6 @@
 {
   "name": "w-debug",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Simple tool for debuging and tracking changes in values",
   "main": "dist/w-debug.js",
   "scripts": {
