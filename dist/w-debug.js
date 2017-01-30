@@ -15,13 +15,39 @@ let wDebug = (params)=>{
     {
 
 
-        this.console = (params.console == false) ? false : true;
-        this.clearOnReconect = (params.clearOnReconect == false) ? false : true;
+        this.console = ((params.console) && (params.console == false)) ? false : true;
+        this.clearOnReconect = ((params.clearOnReconect) && (params.clearOnReconect == false)) ? false : true;
         this.port = (params.port) ? params.port : 28888;
+
+
+        let createRegEx = (value)=> {
+            let val = value.replace(/\*/g, '.*?');
+            return new RegExp('^' + val + '$')
+        }
+
+        this.blackListEmit = (params.blackListEmit) ? params.blackListEmit.map(createRegEx) : [];
+
+
+        this.isInBlackList = (key) =>
+        {
+            let inList = false;
+            this.blackListEmit.map((rule)=>{
+                if (rule.test(key)) inList = true;
+            });
+            return inList
+        };
 
         app.get('/getPort',(req,res)=>{
             res.send({port:this.port});
-        })
+        });
+
+        app.get('/getVariables',(req,res)=>{
+            res.send({blackList:this.blackListEmit,variables:this.variables});
+        });
+
+        app.post('/setVariables',(req,res)=>{
+            res.send('ok')
+        });
 
         if (this.console){
             let _log = global.console.log;
@@ -50,7 +76,8 @@ let wDebug = (params)=>{
                 };
                 updateVariable(key,value);
                 try{
-                    sok.emit('logDebug', data);
+                    if (!this.isInBlackList(key))
+                        sok.emit('logDebug', data);
                 }
                 catch(e){
                 }
@@ -73,7 +100,7 @@ let wDebug = (params)=>{
 
         });
 
-        let variables = [];
+        this.variables = [];
 
         let createVariable = (name)=>{
             let variable = {
@@ -81,27 +108,29 @@ let wDebug = (params)=>{
                 values:['','',''],
                 dates:['','','']
             };
-            variables.push(variable)
+            this.variables.push(variable)
         };
 
 
 
         let updateVariable = (variable,value)=>{
-            let index1 = R.findIndex(R.propEq('name', variable))(variables);
-            if (index1!= -1){
-                variables[index1].values.unshift(value);
-                variables[index1].values.length = 3;
-                variables[index1].dates.unshift(((new Date()).getTime()/1000));
-                variables[index1].dates.length = 3;
-                try{
-                    sok.emit('debugValue', variables);
+            if (!this.isInBlackList(variable)) {
+                let index1 = R.findIndex(R.propEq('name', variable))(this.variables);
+                if (index1 != -1) {
+                    this.variables[index1].values.unshift(value);
+                    this.variables[index1].values.length = 3;
+                    this.variables[index1].dates.unshift(((new Date()).getTime() / 1000));
+                    this.variables[index1].dates.length = 3;
+                    try {
+                        sok.emit('debugValue', this.variables);
+                    }
+                    catch (e) {
+                    }
                 }
-                catch(e){
+                else {
+                    createVariable(variable);
+                    updateVariable(variable, value);
                 }
-            }
-            else{
-                createVariable(variable);
-                updateVariable(variable,value);
             }
         };
 

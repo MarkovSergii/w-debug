@@ -50,6 +50,7 @@ let mainCtrl = ($scope,dragulaService,$http)=>{
 
                 let index =  R.findIndex(R.propEq('name', item.name))($scope.debugValues);
                 item.color = $scope.getColorByType(item.name);
+                item.now = ((new Date()).getTime() / 1000);
                 if (index == -1)
                     $scope.debugValues.push(item)
                 else

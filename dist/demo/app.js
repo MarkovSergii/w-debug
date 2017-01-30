@@ -1,7 +1,8 @@
 const debug = require('../w-debug')({
     console:true,
     clearOnReconect: false,
-    port:3012
+    port:3012,
+    blackListEmit:['test1*']
 });
 
 
@@ -67,7 +68,7 @@ setInterval(()=>{
     let q = [1,2,j]
     showDebug('hello',q);
     j++;
-},800);
+},15000);
 
 setInterval(()=>{
     showDebug('test3dtyyiytgityityityityityityityityityi',k)

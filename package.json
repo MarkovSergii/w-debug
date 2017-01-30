@@ -2,6 +2,21 @@
   "name": "w-debug",
   "version": "1.0.5",
   "description": "Simple tool for debuging and tracking changes in values",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:MarkovSergii/w-debug.git"
+  },
+  "keywords": [
+    "debug",
+    "log",
+    "debugger",
+    "tracking",
+    "values",
+    "variables",
+    "logger",
+    "inspect",
+    "debugging"
+  ],
   "main": "dist/w-debug.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
