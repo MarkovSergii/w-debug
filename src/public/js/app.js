@@ -8,7 +8,7 @@ smartDebug.config(function (JSONFormatterConfigProvider) {
     JSONFormatterConfigProvider.hoverPreviewEnabled = true;
 });
 
-let mainCtrl = ($scope,dragulaService,$http)=>{
+let mainCtrl = ($scope,dragulaService,$http,$interval)=>{
 
     let runSocket = ()=>{
         socket.on('logDebug', function (data) {
@@ -43,14 +43,18 @@ let mainCtrl = ($scope,dragulaService,$http)=>{
             $scope.$apply();
         });
 
+        $interval(()=>{
+            $scope.nowValue = ((new Date()).getTime() / 1000);
+
+        },100);
+
+
 
         socket.on('debugValue', function (data) {
-
             data.map((item)=>{
 
                 let index =  R.findIndex(R.propEq('name', item.name))($scope.debugValues);
                 item.color = $scope.getColorByType(item.name);
-                item.now = ((new Date()).getTime() / 1000);
                 if (index == -1)
                     $scope.debugValues.push(item)
                 else

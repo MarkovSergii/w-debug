@@ -14,7 +14,7 @@ w-debug returns function and takes object with settings
 
 Declaration
 ```
-const debug = require('../w-debug')(
+const debug = require('w-debug')(
     {
         console:true,
         clearOnReconect: false,
